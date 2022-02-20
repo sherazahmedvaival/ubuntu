@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cp /home/ubuntu/.ssh/authorized_keys /root/.ssh/authorized_keys
-
 sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
 cat /etc/ssh/sshd_config | grep -i PermitRootLogin
 
