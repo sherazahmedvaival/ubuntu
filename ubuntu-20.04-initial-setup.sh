@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cp /home/ubuntu/.ssh/authorized_keys /root/.ssh/authorized_keys
+
 sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
 cat /etc/ssh/sshd_config | grep -i PermitRootLogin
 
@@ -10,8 +12,7 @@ apt upgrade -y
 apt install -y apt-utils
 apt install -y build-essential
 apt install -y software-properties-common
-apt install -y net-tools htop ncdu
-apt -y install nfs-common cachefilesd
+apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd
 apt-get autoremove -y
 apt-get clean -y
 
@@ -204,13 +205,16 @@ cat <<EOF | tee /etc/docker/daemon.json
 }
 EOF
 
-apt -y remove docker docker-engine docker.io containerd runc &&apt -y install     ca-certificates     curl     gnupg     lsb-release
+
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt update &&apt -y install docker-ce docker-ce-cli containerd.io
-docker info
+
 curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
-docker-compose --version
 
-shutdown -r now
+
+echo "Setup Complete!"
+echo "You must reboot the server for the changes to take effect"
+echo "shutdown -r now"
+#shutdown -r now
