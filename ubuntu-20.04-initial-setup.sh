@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cp /home/ubuntu/.ssh/authorized_keys /root/.ssh/authorized_keys
-
 sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
 cat /etc/ssh/sshd_config | grep -i PermitRootLogin
 
@@ -204,14 +202,6 @@ cat <<EOF | tee /etc/docker/daemon.json
   }
 }
 EOF
-
-
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt update &&apt -y install docker-ce docker-ce-cli containerd.io
-
-curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
 
 
 echo "Setup Complete!"
