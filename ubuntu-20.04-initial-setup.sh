@@ -181,9 +181,9 @@ cat > /etc/iptables/rules.v4 <<EOF
 :INPUT DROP [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
--A INPUT -s 127.0.0.0/18 -j ACCEPT
--A INPUT -s 10.233.64.0/18 -j ACCEPT
--A INPUT -s 10.233.0.0/18 -j ACCEPT
+-A INPUT -s 127.0.0.0/16 -j ACCEPT
+-A INPUT -s 192.168.0.0 /16 -j ACCEPT
+-A INPUT -s 10.233.0.0/16 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 8448 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 8448 -m state --state NEW -m recent --set --name ssh --mask 255.255.255.255 --rsource
 -A INPUT -p tcp -m tcp --dport 8448 -m state --state NEW -m recent ! --rcheck --seconds 60 --hitcount 3 --name ssh --mask 255.255.255.255 --rsource -j ACCEPT
