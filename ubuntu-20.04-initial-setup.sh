@@ -1,7 +1,10 @@
 #!/bin/bash
 
 sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
-cat /etc/ssh/sshd_config | grep -i PermitRootLogin
+sed -i -E 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+
+swapoff -a; sed -i '/swap/d' /etc/fstab
+
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -10,7 +13,7 @@ apt upgrade -y
 apt install -y apt-utils
 apt install -y build-essential
 apt install -y software-properties-common
-apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd
+apt install -y ntp net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd
 apt-get autoremove -y
 apt-get clean -y
 
