@@ -17,6 +17,10 @@ apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-co
 apt-get autoremove -y
 apt-get clean -y
 
+systemctl unmask systemd-timesyncd.service
+systemctl enable systemd-timesyncd.service
+systemctl start systemd-timesyncd.service
+
 
 cat <<EOF | tee -a /etc/security/limits.conf
 root   soft    nofile  2097152
