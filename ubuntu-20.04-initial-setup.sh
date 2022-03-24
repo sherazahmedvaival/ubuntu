@@ -172,7 +172,10 @@ cat /etc/sysctl.d/01-tweaks.conf
 sysctl -p
 sysctl -p /etc/sysctl.d/01-tweaks.conf
 sysctl net.ipv4.ip_local_port_range
-ufw status && ufw disable && apt install -y iptables iptables-persistent
+
+ufw disable
+apt install -y iptables iptables-persistent
+
 cat > /etc/iptables/rules.v4 <<EOF
 *filter
 :INPUT DROP [0:0]
@@ -187,6 +190,8 @@ cat > /etc/iptables/rules.v4 <<EOF
 -A INPUT -m conntrack --ctstate INVALID -j DROP
 COMMIT
 EOF
+iptables-restore < /etc/iptables/rules.v4
+
 
 cat >> /etc/ssh/sshd_config <<EOF
 Port 8448
@@ -210,8 +215,8 @@ cat <<EOF | tee /etc/docker/daemon.json
 }
 EOF
 
+history -c
 
 echo "Setup Complete!"
 echo "You must reboot the server for the changes to take effect"
 echo "shutdown -r now"
-#shutdown -r now
