@@ -17,10 +17,14 @@ apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-co
 apt-get autoremove -y
 apt-get clean -y
 
+apt update -y
+apt install -y --install-recommends linux-generic-hwe-20.04
+
+echo "tcp_bbr" > /etc/modules-load.d/bbr.conf
+
 systemctl unmask systemd-timesyncd.service
 systemctl enable systemd-timesyncd.service
 systemctl start systemd-timesyncd.service
-
 
 cat <<EOF | tee -a /etc/security/limits.conf
 root   soft    nofile  2097152
@@ -52,126 +56,37 @@ EOF
 cat /etc/systemd/system.conf
 cat > /etc/sysctl.d/01-tweaks.conf <<EOF
 # BEGIN TWEAKS #
-vm.swappiness=0
+vm.swappiness = 0
 net.ipv4.ip_forward = 1
-net.bridge.bridge-nf-call-ip6tables=1
-net.bridge.bridge-nf-call-iptables=1
-
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.core.somaxconn = 32768
 net.netfilter.nf_conntrack_max = 1048576
 net.nf_conntrack_max = 1048576
-net.core.somaxconn = 32768
-kernel.msgmax = 65536
-kernel.msgmnb = 65536
-net.core.netdev_max_backlog = 32768
+net.netfilter.nf_conntrack_tcp_timeout_close = 10
+net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_established = 86400
+net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_last_ack = 30
+net.netfilter.nf_conntrack_tcp_timeout_max_retrans = 60
+net.netfilter.nf_conntrack_tcp_timeout_syn_recv = 60
+net.netfilter.nf_conntrack_tcp_timeout_syn_sent = 60
+net.netfilter.nf_conntrack_tcp_timeout_time_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_unacknowledged = 60
+net.ipv4.tcp_syn_retries = 1
+net.ipv4.tcp_synack_retries = 1
+net.ipv4.ip_local_port_range = 2000 65535
+net.ipv4.tcp_rfc1337 = 1
 net.ipv4.tcp_syncookies = 0
-net.ipv4.tcp_max_syn_backlog = 32768
+net.ipv4.tcp_fin_timeout = 5
+net.ipv4.tcp_keepalive_time = 300
+net.ipv4.tcp_keepalive_probes = 5
+net.ipv4.tcp_keepalive_intvl = 15
+net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_fin_timeout = 15
-
-
-###
-### TUNING NETWORK PERFORMANCE ###
-###
-# For high-bandwidth low-latency networks, use 'htcp' congestion control
-
-# Do a 'modprobe tcp_htcp' first
-net.ipv4.tcp_congestion_control = htcp
-
-# For servers with tcp-heavy workloads, enable 'fq' queue management scheduler (kernel > 3.12)
-net.core.default_qdisc = fq
-
-# Turn on the tcp_window_scaling
-net.ipv4.tcp_window_scaling = 1
-
-# Increase the read-buffer space allocatable
-net.ipv4.tcp_rmem = 8192 87380 16777216
-net.ipv4.udp_rmem_min = 16384
-net.core.rmem_default = 262144
-net.core.rmem_max = 16777216
-
-# Increase the write-buffer-space allocatable
-net.ipv4.tcp_wmem = 8192 65536 16777216
-net.ipv4.udp_wmem_min = 16384
-net.core.wmem_default = 262144
-net.core.wmem_max = 16777216
-
-# Increase number of incoming connections
-net.core.somaxconn = 32768
-
-# Increase number of incoming connections backlog
-net.core.netdev_max_backlog = 16384
-net.core.dev_weight = 64
-
-# Increase the maximum amount of option memory buffers
-net.core.optmem_max = 65535
-
-# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks
-
-net.ipv4.tcp_max_tw_buckets = 1440000
-
-# try to reuse time-wait connections, but don't recycle them (recycle can break clients behind NAT)
-net.ipv4.tcp_tw_recycle = 0
-net.ipv4.tcp_tw_reuse = 1
-
-# Limit number of orphans, each orphan can eat up to 16M (max wmem) of unswappable memory
-net.ipv4.tcp_max_orphans = 16384
-net.ipv4.tcp_orphan_retries = 0
-
-# Increase the maximum memory used to reassemble IP fragments
-net.ipv4.ipfrag_high_thresh = 512000
-net.ipv4.ipfrag_low_thresh = 446464
-
-# don't cache ssthresh from previous connection
-net.ipv4.tcp_no_metrics_save = 1
-net.ipv4.tcp_moderate_rcvbuf = 1
-
-# Increase size of RPC datagram queue length
-net.unix.max_dgram_qlen = 50
-
-# Don't allow the arp table to become bigger than this
-net.ipv4.neigh.default.gc_thresh3 = 2048
-
-# Tell the gc when to become aggressive with arp table cleaning.
-# Adjust this based on size of the LAN. 1024 is suitable for most /24 networks
-net.ipv4.neigh.default.gc_thresh2 = 1024
-
-# Adjust where the gc will leave arp table alone - set to 32.
-net.ipv4.neigh.default.gc_thresh1 = 32
-
-# Adjust to arp table gc to clean-up more often
-net.ipv4.neigh.default.gc_interval = 30
-
-# Increase TCP queue length
-net.ipv4.neigh.default.proxy_qlen = 96
-net.ipv4.neigh.default.unres_qlen = 6
-
-# Enable Explicit Congestion Notification (RFC 3168), disable it if it doesn't work for you
-net.ipv4.tcp_ecn = 1
-net.ipv4.tcp_reordering = 3
-
-# How many times to retry killing an alive TCP connection
-net.ipv4.tcp_retries2 = 15
-net.ipv4.tcp_retries1 = 3
-
-# Avoid falling back to slow start after a connection goes idle
-# keeps our cwnd large with the keep alive connections (kernel > 3.6)
-net.ipv4.tcp_slow_start_after_idle = 0
-
-# Allow the TCP fastopen flag to be used, beware some firewalls do not like TFO! (kernel > 3.7)
-net.ipv4.tcp_fastopen = 3
-
-# This will enusre that immediatly subsequent connections use the new values
-net.ipv4.route.flush = 1
-net.ipv6.route.flush = 1
-
-net.ipv4.ip_local_port_range = 15000 65000
-# END TWEAKS #
+net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
 EOF
-
-cat /etc/sysctl.d/01-tweaks.conf
-sysctl -p
-sysctl -p /etc/sysctl.d/01-tweaks.conf
-sysctl net.ipv4.ip_local_port_range
 
 ufw disable
 apt install -y iptables iptables-persistent
