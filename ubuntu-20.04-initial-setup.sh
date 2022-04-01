@@ -26,16 +26,19 @@ systemctl unmask systemd-timesyncd.service
 systemctl enable systemd-timesyncd.service
 systemctl start systemd-timesyncd.service
 
+# check max limit
+# cat /proc/sys/kernel/pid_max
+
 cat <<EOF | tee -a /etc/security/limits.conf
-root   soft    nofile  2097152
-root   hard    nofile  2097152
+root   soft    nofile  4194304
+root   hard    nofile  4194304
 root   soft    nproc   unlimited
 root   hard    nproc   unlimited
 root   soft    memlock unlimited
 root   hard    memlock unlimite
 
-*   soft    nofile  2097152
-*   hard    nofile  2097152
+*   soft    nofile  4194304
+*   hard    nofile  4194304
 *   soft    nproc   unlimited
 *   hard    nproc   unlimited
 *   soft    memlock unlimited
