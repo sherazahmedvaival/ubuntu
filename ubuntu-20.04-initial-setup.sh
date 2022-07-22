@@ -89,6 +89,12 @@ net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_tw_reuse = 1
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
+
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_synack_retries = 1
+net.ipv4.tcp_max_syn_backlog = 1024
+
+
 EOF
 
 ufw disable
@@ -117,7 +123,7 @@ iptables-restore < /etc/iptables/rules.v4
 cat >> /etc/ssh/sshd_config <<EOF
 Port 8448
 Protocol 2
-MaxAuthTries 6
+MaxAuthTries 3
 IgnoreRhosts yes
 PermitEmptyPasswords no
 PasswordAuthentication no
