@@ -133,6 +133,20 @@ EOF
 
 #iptables-restore < /etc/iptables/rules.v4
 
+cat <<EOF | tee /etc/iptables/rules.v6
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -p tcp -m tcp --dport 8448 -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -m conntrack --ctstate INVALID -j DROP
+COMMIT
+EOF
+
+
 cat >> /etc/ssh/sshd_config <<EOF
 Port 8448
 Protocol 2
