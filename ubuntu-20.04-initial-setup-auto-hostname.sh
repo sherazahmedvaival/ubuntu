@@ -10,6 +10,9 @@ export DEBIAN_FRONTEND=noninteractive
 
 hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | awk '{print $2}')
 
+echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
+
+
 apt update -y
 apt upgrade -y
 apt install -y apt-utils
