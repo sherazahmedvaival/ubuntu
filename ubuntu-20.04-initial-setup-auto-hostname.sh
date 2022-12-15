@@ -108,6 +108,7 @@ apt install -y iptables iptables-persistent
 WHITE_LIST_IPS="";
 while read line; do
   if [[ "$line" == "127.0."* ]] || [[ -z "${line// }" ]]; then continue; fi;
+  if [[ "$line" == "#"* ]] || [[ -z "${line// }" ]]; then continue; fi;
   IP=$(echo "$line" | awk '{print $1}');
   if [[ ! -z "${WHITE_LIST_IPS// }" ]]; then WHITE_LIST_IPS="$WHITE_LIST_IPS\n"; fi;
   WHITE_LIST_IPS="$WHITE_LIST_IPS-A INPUT -s $IP -j ACCEPT";
@@ -124,9 +125,6 @@ cat <<EOF | tee -a /etc/iptables/rules.v4
 -A INPUT -s 127.0.0.0/16 -j ACCEPT
 -A INPUT -s 192.168.0.0/16 -j ACCEPT
 -A INPUT -s 10.233.0.0/16 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 8448 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 8448 -m state --state NEW -m recent --set --name ssh --mask 255.255.255.255 --rsource
--A INPUT -p tcp -m tcp --dport 8448 -m state --state NEW -m recent ! --rcheck --seconds 60 --hitcount 3 --name ssh --mask 255.255.255.255 --rsource -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
