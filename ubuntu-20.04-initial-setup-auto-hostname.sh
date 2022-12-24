@@ -122,9 +122,10 @@ cat <<EOF | tee /etc/iptables/rules.v4
 EOF
 echo -e "$WHITE_LIST_IPS" >> /etc/iptables/rules.v4
 cat <<EOF | tee -a /etc/iptables/rules.v4
--A INPUT -s 127.0.0.0/16 -j ACCEPT
+-A INPUT -s 10.0.0.0/8 -j ACCEPT
+-A INPUT -s 172.16.0.0/12 -j ACCEPT
 -A INPUT -s 192.168.0.0/16 -j ACCEPT
--A INPUT -s 10.233.0.0/16 -j ACCEPT
+-A INPUT -s 127.0.0.0/16 -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
@@ -170,11 +171,12 @@ cat <<EOF | tee /etc/docker/daemon.json
 }
 EOF
 
-mkdir -p /data /data-media-cache /local-storage
-chmod -R 0755 /data /data-media-cache /local-storage
-chown -R 65534:65534 /data /data-media-cache /local-storage
+mkdir -p /data /data-media-cache /data_lpp
+chmod -R 0755 /data /data-media-cache /data_lpp
+chown -R 65534:65534 /data /data-media-cache /data_lpp
 
 rm .bash_history
 history -c
 
 echo "Setup Complete!"
+
