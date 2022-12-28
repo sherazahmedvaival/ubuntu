@@ -1,13 +1,14 @@
 #!/bin/bash
 
-swapoff -a; sed -i '/swap/d' /etc/fstab
+ORIGINAL_USER=$(who am i | awk '{print $1}')
 
+swapoff -a; sed -i '/swap/d' /etc/fstab
 
 export DEBIAN_FRONTEND=noninteractive
 
 hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | awk '{print $2}')
 
-cat /home/ubuntu/.bashrc | tee /root/.bashrc
+cat /home/${ORIGINAL_USER}/.bashrc | tee /root/.bashrc
 echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> /root/.bashrc
 
 apt update -y
