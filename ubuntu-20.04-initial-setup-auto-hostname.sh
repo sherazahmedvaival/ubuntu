@@ -1,15 +1,23 @@
 #!/bin/bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 ORIGINAL_USER=$(who am i | awk '{print $1}')
+
+mkdir ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod go-w ~/
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+cat /home/${ORIGINAL_USER}/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
+
+cat /home/${ORIGINAL_USER}/.bashrc | tee ~/.bashrc
+echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
 
 swapoff -a; sed -i '/swap/d' /etc/fstab
 
-export DEBIAN_FRONTEND=noninteractive
-
 hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | awk '{print $2}')
-
-cat /home/${ORIGINAL_USER}/.bashrc | tee /root/.bashrc
-echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> /root/.bashrc
 
 apt update -y
 apt upgrade -y
@@ -103,13 +111,23 @@ EOF
 ufw disable
 apt install -y iptables iptables-persistent
 
+#WHITE_LIST_IPS="";
+#while read line; do
+#  if [[ "$line" == "127.0."* ]] || [[ -z "${line// }" ]]; then continue; fi;
+#  #if [[ "$line" == "#"* ]] || [[ -z "${line// }" ]]; then continue; fi;
+#  if [[ "$line" == ^[0-9] ]] || [[ -z "${line// }" ]]; then continue; fi;
+#  IP=$(echo "$line" | awk '{print $1}');
+#  if [[ ! -z "${WHITE_LIST_IPS// }" ]]; then WHITE_LIST_IPS="$WHITE_LIST_IPS\n"; fi;
+#  WHITE_LIST_IPS="$WHITE_LIST_IPS-A INPUT -s $IP -j ACCEPT";
+#done </etc/hosts
+
 WHITE_LIST_IPS="";
 while read line; do
-  if [[ "$line" == "127.0."* ]] || [[ -z "${line// }" ]]; then continue; fi;
-  if [[ "$line" == "#"* ]] || [[ -z "${line// }" ]]; then continue; fi;
-  IP=$(echo "$line" | awk '{print $1}');
-  if [[ ! -z "${WHITE_LIST_IPS// }" ]]; then WHITE_LIST_IPS="$WHITE_LIST_IPS\n"; fi;
-  WHITE_LIST_IPS="$WHITE_LIST_IPS-A INPUT -s $IP -j ACCEPT";
+  if [[ "$line" != "127.0."* ]] && [[ "$line" == [0-9]* ]]; then
+  	IP=$(echo "$line" | awk '{print $1}');
+  	if [[ ! -z "${WHITE_LIST_IPS// }" ]]; then WHITE_LIST_IPS="$WHITE_LIST_IPS\n"; fi;
+  	WHITE_LIST_IPS="$WHITE_LIST_IPS-A INPUT -s $IP -j ACCEPT";
+  fi;
 done </etc/hosts
 
 cat <<EOF | tee /etc/iptables/rules.v4
