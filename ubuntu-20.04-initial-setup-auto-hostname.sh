@@ -207,9 +207,6 @@ TCPKeepAlive yes
 
 # Enable PFS ciphersuites.
 Ciphers aes256-ctr
-
-# Enable the strongest HMAC OpenSSH supports.
-MACs hmac-sha2-512
 EOF
 
 
