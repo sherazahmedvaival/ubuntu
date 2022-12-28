@@ -165,9 +165,8 @@ COMMIT
 EOF
 
 
-cat <<EOF | tee /etc/ssh/sshd_config.d/99-override.conf
-LogLevel INFO
 
+cat <<EOF | tee /etc/ssh/sshd_config.d/99-override.conf
 ListenAddress 0.0.0.0
 Port 8448
 Protocol 2
@@ -176,6 +175,16 @@ IgnoreRhosts yes
 PermitEmptyPasswords no
 PasswordAuthentication no
 HostbasedAuthentication no
+RhostsRSAAuthentication no
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication:
+LoginGraceTime 120
+PermitRootLogin without-password
+StrictModes yes
 
 UsePAM yes
 
@@ -183,14 +192,26 @@ AuthenticationMethods publickey
 PubkeyAuthentication yes
 RSAAuthentication yes
 
-PermitRootLogin without-password
+
 
 AllowTcpForwarding yes
 TCPKeepAlive no
 PasswordAuthentication no
 ChallengeResponseAuthentication no
 
+X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd yes
+PrintLastLog yes
+TCPKeepAlive yes
+
+# Enable PFS ciphersuites.
+Ciphers aes256-ctr
+
+# Enable the strongest HMAC OpenSSH supports.
+MACs hmac-sha2-512
 EOF
+
 
 
 #sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
