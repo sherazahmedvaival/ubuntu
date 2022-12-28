@@ -1,8 +1,5 @@
 #!/bin/bash
 
-sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
-sed -i -E 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-
 swapoff -a; sed -i '/swap/d' /etc/fstab
 
 
@@ -149,7 +146,10 @@ COMMIT
 EOF
 
 
-cat >> /etc/ssh/sshd_config <<EOF
+cat <<EOF | tee /etc/ssh/sshd_config.d/99-override.conf
+LogLevel INFO
+
+ListenAddress 0.0.0.0
 Port 8448
 Protocol 2
 MaxAuthTries 3
@@ -157,9 +157,37 @@ IgnoreRhosts yes
 PermitEmptyPasswords no
 PasswordAuthentication no
 HostbasedAuthentication no
-LogLevel INFO
+
+UsePAM yes
+
+AuthenticationMethods publickey
+PubkeyAuthentication yes
+RSAAuthentication yes
+
+PermitRootLogin without-password
+
 AllowTcpForwarding yes
+TCPKeepAlive no
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+
 EOF
+
+
+#sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
+#sed -i -E 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+
+#cat >> /etc/ssh/sshd_config <<EOF
+#Port 8448
+#Protocol 2
+#MaxAuthTries 3
+#IgnoreRhosts yes
+#PermitEmptyPasswords no
+#PasswordAuthentication no
+#HostbasedAuthentication no
+#LogLevel INFO
+#AllowTcpForwarding yes
+#EOF
 
 cat <<EOF | tee /etc/docker/daemon.json
 {
