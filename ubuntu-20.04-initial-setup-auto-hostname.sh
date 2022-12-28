@@ -10,9 +10,9 @@ chmod go-w ~/
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
-cat /home/${ORIGINAL_USER}/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
+cat /home/ubuntu/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
 
-cat /home/${ORIGINAL_USER}/.bashrc | tee ~/.bashrc
+cat /home/ubuntu/.bashrc | tee ~/.bashrc
 echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
 
 swapoff -a; sed -i '/swap/d' /etc/fstab
