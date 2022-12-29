@@ -14,8 +14,13 @@ cat /home/ubuntu/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
 
 cat /home/ubuntu/.bashrc | tee ~/.bashrc
 
-echo "PS1='\n`uptime`\n\${debian_chroot:+(\$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\$PWD\[\033[00m\]\n\$ '" >> ~/.bashrc
-echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
+#echo "PS1='\n`uptime`\n\${debian_chroot:+(\$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\$PWD\[\033[00m\]\n\$ '" >> ~/.bashrc
+#echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
+
+wget -O ~/.bashrc_fancy_prompts https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompts
+chmod +x ~/.bashrc_fancy_prompts
+echo "source ~/.bashrc_fancy_prompts" >> ~/.bashrc
+
 
 swapoff -a; sed -i '/swap/d' /etc/fstab
 
