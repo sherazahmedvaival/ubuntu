@@ -41,8 +41,11 @@ fancy-prompts-command() {
 
     local lb="❲" rb="❳"
 
-    local name_co=$green prom_co=$dk_gray line_co=$dk_gray  date_co=$dk_gray
-    local time_co=$dk_gray   host_co=$green  path_co=$yellow title_co=$lt_red at_co=$green
+    #local name_co=$green prom_co=$dk_gray line_co=$dk_gray  date_co=$dk_gray
+    #local time_co=$dk_gray   host_co=$green  path_co=$yellow title_co=$lt_red at_co=$green
+    
+    local name_co=$dk_gray prom_co=$dk_gray line_co=$dk_gray  date_co=$dk_gray
+    local time_co=$dk_gray   host_co=$dk_gray  path_co=$dk_gray title_co=$dk_gray at_co=$dk_gray
 
     local load_1_co=$white
     local load_5_co=$cyan
