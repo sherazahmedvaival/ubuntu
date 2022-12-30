@@ -26,7 +26,7 @@ cat /home/ubuntu/.bashrc | tee ~/.bashrc
 wget -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
 chmod +x ~/.bashrc_fancy_prompt_v2.sh
 echo "source ~/.bashrc_fancy_prompt_v2.sh" >> ~/.bashrc
-
+source ~/.bashrc_fancy_prompt_v2.sh
 
 swapoff -a; sed -i '/swap/d' /etc/fstab
 
