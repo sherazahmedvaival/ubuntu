@@ -13,7 +13,7 @@ apt upgrade -y
 apt install -y apt-utils
 apt install -y build-essential
 apt install -y software-properties-common
-apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd rename acl
+apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd rename acl p7zip-full p7zip-rar net-tools
 apt-get autoremove -y
 apt-get clean -y
 
