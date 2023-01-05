@@ -1,12 +1,26 @@
 #!/bin/bash
 
-sed -i -E 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
-sed -i -E 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+export DEBIAN_FRONTEND=noninteractive
+
+ORIGINAL_USER=$(who am i | awk '{print $1}')
+
+mkdir ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod go-w ~/
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+cat /home/ubuntu/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
+
+cat /home/ubuntu/.bashrc | tee ~/.bashrc
+
+# Version 2
+wget -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
+chmod +x ~/.bashrc_fancy_prompt_v2.sh
+echo "source ~/.bashrc_fancy_prompt_v2.sh" >> ~/.bashrc
+source ~/.bashrc_fancy_prompt_v2.sh
 
 swapoff -a; sed -i '/swap/d' /etc/fstab
-
-
-export DEBIAN_FRONTEND=noninteractive
 
 apt update -y
 apt upgrade -y
@@ -100,27 +114,53 @@ EOF
 ufw disable
 apt install -y iptables iptables-persistent
 
-cat > /etc/iptables/rules.v4 <<EOF
+WHITE_LIST_IPS="";
+while read line; do
+  if [[ "$line" != "127.0."* ]] && [[ "$line" == [0-9]* ]]; then
+  	IP=$(echo "$line" | awk '{print $1}');
+  	if [[ ! -z "${WHITE_LIST_IPS// }" ]]; then WHITE_LIST_IPS="$WHITE_LIST_IPS\n"; fi;
+  	WHITE_LIST_IPS="$WHITE_LIST_IPS-A INPUT -s $IP -j ACCEPT";
+  fi;
+done </etc/hosts
+
+cat <<EOF | tee /etc/iptables/rules.v4
 *filter
 :INPUT DROP [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
--A INPUT -s 127.0.0.0/16 -j ACCEPT
+EOF
+echo -e "$WHITE_LIST_IPS" >> /etc/iptables/rules.v4
+cat <<EOF | tee -a /etc/iptables/rules.v4
+-A INPUT -s 10.0.0.0/8 -j ACCEPT
+-A INPUT -s 172.16.0.0/12 -j ACCEPT
 -A INPUT -s 192.168.0.0/16 -j ACCEPT
--A INPUT -s 10.233.0.0/16 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 8448 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 8448 -m state --state NEW -m recent --set --name ssh --mask 255.255.255.255 --rsource
--A INPUT -p tcp -m tcp --dport 8448 -m state --state NEW -m recent ! --rcheck --seconds 60 --hitcount 3 --name ssh --mask 255.255.255.255 --rsource -j ACCEPT
+-A INPUT -s 127.0.0.0/16 -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
 -A INPUT -m conntrack --ctstate INVALID -j DROP
 COMMIT
 EOF
-iptables-restore < /etc/iptables/rules.v4
+
+#iptables-restore < /etc/iptables/rules.v4
+
+cat <<EOF | tee /etc/iptables/rules.v6
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -p tcp -m tcp --dport 8448 -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -m conntrack --ctstate INVALID -j DROP
+COMMIT
+EOF
 
 
-cat >> /etc/ssh/sshd_config <<EOF
+
+cat <<EOF | tee /etc/ssh/sshd_config.d/99-override.conf
+ListenAddress 0.0.0.0
 Port 8448
 Protocol 2
 MaxAuthTries 3
@@ -128,8 +168,38 @@ IgnoreRhosts yes
 PermitEmptyPasswords no
 PasswordAuthentication no
 HostbasedAuthentication no
+RhostsRSAAuthentication no
+
+# Logging
+SyslogFacility AUTH
 LogLevel INFO
+
+# Authentication:
+LoginGraceTime 120
+PermitRootLogin without-password
+StrictModes yes
+
+UsePAM yes
+
+AuthenticationMethods publickey
+PubkeyAuthentication yes
+RSAAuthentication yes
+
+
+
 AllowTcpForwarding yes
+TCPKeepAlive no
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+
+X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd yes
+PrintLastLog yes
+TCPKeepAlive yes
+
+# Enable PFS ciphersuites.
+Ciphers aes256-ctr
 EOF
 
 cat <<EOF | tee /etc/docker/daemon.json
@@ -142,8 +212,5 @@ cat <<EOF | tee /etc/docker/daemon.json
 }
 EOF
 
-history -c
-
 echo "Setup Complete!"
-echo "You must reboot the server for the changes to take effect"
-echo "shutdown -r now"
+
