@@ -2,6 +2,30 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+swapoff -a; sed -i '/swap/d' /etc/fstab
+
+hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | awk '{print $2}')
+
+apt update -y
+apt upgrade -y
+apt install -y apt-utils
+apt install -y build-essential
+apt install -y software-properties-common
+apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd rename acl p7zip-full p7zip-rar net-tools ntp
+apt-get autoremove -y
+apt-get clean -y
+
+apt update -y
+apt install -y --install-recommends linux-generic-hwe-20.04
+
+echo "tcp_bbr" > /etc/modules-load.d/bbr.conf
+
+systemctl unmask systemd-timesyncd.service
+systemctl enable systemd-timesyncd.service
+systemctl start systemd-timesyncd.service
+
+
+
 ORIGINAL_USER=$(who am i | awk '{print $1}')
 
 mkdir ~/.ssh
@@ -23,32 +47,11 @@ cat /home/ubuntu/.bashrc | tee ~/.bashrc
 #echo "source ~/.bashrc_fancy_prompts" >> ~/.bashrc
 
 # Version 2
-wget --no-check-certificate -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
+wget -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
 chmod +x ~/.bashrc_fancy_prompt_v2.sh
 echo "source ~/.bashrc_fancy_prompt_v2.sh" >> ~/.bashrc
 source ~/.bashrc_fancy_prompt_v2.sh
 
-swapoff -a; sed -i '/swap/d' /etc/fstab
-
-hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | awk '{print $2}')
-
-apt update -y
-apt upgrade -y
-apt install -y apt-utils
-apt install -y build-essential
-apt install -y software-properties-common
-apt install -y net-tools htop ncdu ca-certificates curl gnupg lsb-release nfs-common cachefilesd rename acl p7zip-full p7zip-rar net-tools
-apt-get autoremove -y
-apt-get clean -y
-
-apt update -y
-apt install -y --install-recommends linux-generic-hwe-20.04
-
-echo "tcp_bbr" > /etc/modules-load.d/bbr.conf
-
-systemctl unmask systemd-timesyncd.service
-systemctl enable systemd-timesyncd.service
-systemctl start systemd-timesyncd.service
 
 # check max limit
 # cat /proc/sys/kernel/pid_max
