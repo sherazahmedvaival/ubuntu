@@ -18,12 +18,12 @@ cat /home/ubuntu/.bashrc | tee ~/.bashrc
 #echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
 
 # Version 1
-#wget -O ~/.bashrc_fancy_prompts https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompts
+#wget --no-check-certificate -O ~/.bashrc_fancy_prompts https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompts
 #chmod +x ~/.bashrc_fancy_prompts
 #echo "source ~/.bashrc_fancy_prompts" >> ~/.bashrc
 
 # Version 2
-wget -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
+wget --no-check-certificate -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
 chmod +x ~/.bashrc_fancy_prompt_v2.sh
 echo "source ~/.bashrc_fancy_prompt_v2.sh" >> ~/.bashrc
 source ~/.bashrc_fancy_prompt_v2.sh
