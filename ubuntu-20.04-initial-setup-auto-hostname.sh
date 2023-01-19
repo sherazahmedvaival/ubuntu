@@ -88,6 +88,7 @@ cat > /etc/sysctl.d/01-tweaks.conf <<EOF
 # BEGIN TWEAKS #
 vm.swappiness = 0
 net.ipv4.ip_forward = 1
+net.ipv6.conf.all.forwarding=1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.core.somaxconn = 32768
