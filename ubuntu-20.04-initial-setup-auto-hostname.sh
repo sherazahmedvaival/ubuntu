@@ -91,7 +91,7 @@ net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding=1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
-net.core.somaxconn = 32768
+net.core.somaxconn = 300000
 net.netfilter.nf_conntrack_max = 1048576
 net.nf_conntrack_max = 1048576
 net.netfilter.nf_conntrack_tcp_timeout_close = 10
@@ -105,11 +105,10 @@ net.netfilter.nf_conntrack_tcp_timeout_syn_sent = 60
 net.netfilter.nf_conntrack_tcp_timeout_time_wait = 60
 net.netfilter.nf_conntrack_tcp_timeout_unacknowledged = 60
 net.ipv4.tcp_syn_retries = 1
-net.ipv4.tcp_synack_retries = 1
+net.ipv4.tcp_synack_retries = 3
 net.ipv4.ip_local_port_range = 2000 65535
 net.ipv4.tcp_rfc1337 = 1
-net.ipv4.tcp_syncookies = 0
-net.ipv4.tcp_fin_timeout = 5
+net.ipv4.tcp_fin_timeout = 30
 net.ipv4.tcp_keepalive_time = 300
 net.ipv4.tcp_keepalive_probes = 5
 net.ipv4.tcp_keepalive_intvl = 15
@@ -119,9 +118,8 @@ net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 
 net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_synack_retries = 1
-net.ipv4.tcp_max_syn_backlog = 1024
-
+net.ipv4.tcp_max_syn_backlog = 100000
+net.ipv4.ip_nonlocal_bind    = 1
 
 EOF
 
