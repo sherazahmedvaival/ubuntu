@@ -84,7 +84,7 @@ DefaultLimitMEMLOCK=infinity
 EOF
 
 cat /etc/systemd/system.conf
-cat <<EOF | tee /etc/sysctl.d/01-tweaks.conf <<EOF
+cat <<EOF | tee /etc/sysctl.d/01-tweaks.conf
 # BEGIN TWEAKS #
 vm.swappiness = 0
 net.ipv4.ip_forward = 1
