@@ -120,8 +120,9 @@ net.ipv4.tcp_congestion_control=bbr
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_max_syn_backlog = 100000
 net.ipv4.ip_nonlocal_bind    = 1
-
 EOF
+
+# sysctl --system
 
 ufw disable
 apt install -y iptables iptables-persistent
