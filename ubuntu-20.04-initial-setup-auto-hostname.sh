@@ -4,7 +4,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 swapoff -a; sed -i '/swap/d' /etc/fstab
 
-hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | awk '{print $2}')
+hostnamectl set-hostname $(grep "`hostname -I | awk '{print $1}'`" /etc/hosts | head -1 | awk '{print $2}')
 
 apt update -y
 apt upgrade -y
