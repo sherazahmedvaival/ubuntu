@@ -213,7 +213,6 @@ RSAAuthentication yes
 
 AllowTcpForwarding yes
 TCPKeepAlive no
-PasswordAuthentication no
 ChallengeResponseAuthentication no
 
 X11Forwarding yes
