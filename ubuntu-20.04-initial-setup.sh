@@ -73,6 +73,7 @@ EOF
 cat /etc/systemd/system.conf
 cat > /etc/sysctl.d/01-tweaks.conf <<EOF
 # BEGIN TWEAKS #
+overcommit_memory = 1
 vm.swappiness = 0
 net.ipv4.ip_forward = 1
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -107,10 +108,44 @@ net.ipv4.tcp_congestion_control=bbr
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_synack_retries = 1
 net.ipv4.tcp_max_syn_backlog = 1024
-
-
 EOF
 
+
+#############################################
+
+cat <<EOF | tee /etc/rc.local
+#!/bin/bash  
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+exit 0 
+EOF
+cat /etc/rc.local
+chmod +x /etc/rc.local
+
+cat <<EOF | tee /etc/systemd/system/rc-local.service
+[Unit]  
+ Description=/etc/rc.local Compatibility  
+ ConditionPathExists=/etc/rc.local  
+
+[Service]  
+ Type=forking  
+ ExecStart=/etc/rc.local start  
+ TimeoutSec=0  
+ StandardOutput=tty  
+ RemainAfterExit=yes  
+ SysVStartPriority=99  
+
+[Install]  
+ WantedBy=multi-user.target
+EOF
+
+chmod 644 /etc/systemd/system/rc-local.service
+cat /etc/systemd/system/rc-local.service
+
+systemctl daemon-reload
+systemctl enable rc-local
+
+#############################################
 ufw disable
 apt install -y iptables iptables-persistent
 
