@@ -88,6 +88,7 @@ cat /etc/systemd/system.conf
 cat <<EOF | tee /etc/sysctl.d/01-tweaks.conf
 # BEGIN TWEAKS #
 vm.swappiness = 0
+vm.overcommit_memory = 1
 net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding=1
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -124,6 +125,7 @@ net.ipv4.ip_nonlocal_bind    = 1
 EOF
 
 # sysctl --system
+
 
 ufw disable
 apt install -y iptables iptables-persistent
