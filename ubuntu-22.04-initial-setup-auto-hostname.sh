@@ -126,6 +126,40 @@ EOF
 
 # sysctl --system
 
+#############################################
+cat <<EOF | tee /etc/rc.local
+#!/bin/bash  
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+exit 0 
+EOF
+cat /etc/rc.local
+chmod +x /etc/rc.local
+
+cat <<EOF | tee /etc/systemd/system/rc-local.service
+[Unit]  
+ Description=/etc/rc.local Compatibility  
+ ConditionPathExists=/etc/rc.local  
+
+[Service]  
+ Type=forking  
+ ExecStart=/etc/rc.local start  
+ TimeoutSec=0  
+ StandardOutput=tty  
+ RemainAfterExit=yes  
+ SysVStartPriority=99  
+
+[Install]  
+ WantedBy=multi-user.target
+EOF
+
+chmod 644 /etc/systemd/system/rc-local.service
+cat /etc/systemd/system/rc-local.service
+
+systemctl daemon-reload
+systemctl enable rc-local
+
+#############################################
 
 ufw disable
 apt install -y iptables iptables-persistent
