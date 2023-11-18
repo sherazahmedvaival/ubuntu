@@ -11,8 +11,13 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
 cat /home/ubuntu/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
-
 cat /home/ubuntu/.bashrc | tee ~/.bashrc
+
+cat <<EOF | tee /home/ubuntu/.vimrc
+set number
+syntax on
+EOF
+cat /home/ubuntu/.vimrc | tee ~/.vimrc
 
 # Version 2
 wget -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahmedvaival/ubuntu/main/.bashrc_fancy_prompt_v2.sh
