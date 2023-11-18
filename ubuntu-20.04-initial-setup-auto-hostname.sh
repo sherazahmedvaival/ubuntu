@@ -36,8 +36,13 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 
 cat /home/ubuntu/.ssh/authorized_keys | tee ~/.ssh/authorized_keys
-
 cat /home/ubuntu/.bashrc | tee ~/.bashrc
+
+cat <<EOF | tee /home/ubuntu/.vimrc
+set number
+syntax on
+EOF
+cat /home/ubuntu/.vimrc | tee ~/.vimrc
 
 #echo "PS1='\n`uptime`\n\${debian_chroot:+(\$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\$PWD\[\033[00m\]\n\$ '" >> ~/.bashrc
 #echo 'PS1=$PS1"\[\e]0;`hostname`\a\]"' >> ~/.bashrc
@@ -52,7 +57,6 @@ wget -O ~/.bashrc_fancy_prompt_v2.sh https://raw.githubusercontent.com/sherazahm
 chmod +x ~/.bashrc_fancy_prompt_v2.sh
 echo "source ~/.bashrc_fancy_prompt_v2.sh" >> ~/.bashrc
 source ~/.bashrc_fancy_prompt_v2.sh
-
 
 # check max limit
 # cat /proc/sys/kernel/pid_max
