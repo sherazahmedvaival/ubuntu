@@ -88,6 +88,7 @@ cat /etc/systemd/system.conf
 cat <<EOF | tee /etc/sysctl.d/01-tweaks.conf
 # BEGIN TWEAKS #
 vm.swappiness = 0
+vm.max_map_count = 262144
 vm.overcommit_memory = 1
 net.ipv4.ip_forward = 1
 net.ipv6.conf.all.forwarding=1
