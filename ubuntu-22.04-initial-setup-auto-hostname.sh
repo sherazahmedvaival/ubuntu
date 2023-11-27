@@ -224,6 +224,7 @@ cat <<EOF | tee /etc/ssh/sshd_config.d/99-override.conf
 ListenAddress 0.0.0.0
 Port 8448
 Protocol 2
+ClientAliveInterval 3600
 MaxAuthTries 3
 IgnoreRhosts yes
 PermitEmptyPasswords no
