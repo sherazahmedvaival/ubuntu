@@ -54,14 +54,14 @@ root   hard    nofile  4194304
 root   soft    nproc   unlimited
 root   hard    nproc   unlimited
 root   soft    memlock unlimited
-root   hard    memlock unlimite
+root   hard    memlock unlimited
 
 *   soft    nofile  4194304
 *   hard    nofile  4194304
 *   soft    nproc   unlimited
 *   hard    nproc   unlimited
 *   soft    memlock unlimited
-*   hard    memlock unlimite
+*   hard    memlock unlimited
 EOF
 
 cat /etc/security/limits.conf
