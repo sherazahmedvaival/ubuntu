@@ -264,5 +264,9 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 EOF
 
+# Enable NFS CacheFiles
+sed -i 's/#RUN=yes/RUN=yes/g' /etc/default/cachefilesd
+
+
 echo "Setup Complete!"
 
