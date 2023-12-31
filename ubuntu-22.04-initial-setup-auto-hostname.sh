@@ -25,8 +25,6 @@ systemctl unmask systemd-timesyncd.service
 systemctl enable systemd-timesyncd.service
 systemctl start systemd-timesyncd.service
 
-
-
 ORIGINAL_USER=$(who am i | awk '{print $1}')
 
 mkdir ~/.ssh
@@ -288,6 +286,16 @@ cat <<EOF | tee /etc/docker/daemon.json
     "max-file": "3"
   }
 }
+EOF
+
+
+systemctl disable systemd-resolved
+systemctl stop systemd-resolved
+
+rm -f /etc/resolv.conf
+cat <<EOF | tee /etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
 EOF
 
 mkdir -p /data /data-media-cache /data_lpp
