@@ -266,6 +266,11 @@ EOF
 
 # Enable NFS CacheFiles
 sed -i 's/#RUN=yes/RUN=yes/g' /etc/default/cachefilesd
+systemd enable cachefilesd.service
+
+# Conformation
+cat /proc/fs/nfsfs/servers
+cat /proc/fs/nfsfs/volumes
 
 
 echo "Setup Complete!"
