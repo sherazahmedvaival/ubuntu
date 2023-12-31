@@ -296,6 +296,16 @@ cat <<EOF | tee /etc/docker/daemon.json
 }
 EOF
 
+
+systemctl disable systemd-resolved
+systemctl stop systemd-resolved
+
+rm -f /etc/resolv.conf
+cat <<EOF | tee /etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+
 mkdir -p /data /data-media-cache /data_lpp
 chmod -R 0755 /data /data-media-cache /data_lpp
 chown -R 65534:65534 /data /data-media-cache /data_lpp
