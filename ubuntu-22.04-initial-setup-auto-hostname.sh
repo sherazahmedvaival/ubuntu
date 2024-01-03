@@ -289,14 +289,14 @@ cat <<EOF | tee /etc/docker/daemon.json
 EOF
 
 
-systemctl disable systemd-resolved
-systemctl stop systemd-resolved
-
-rm -f /etc/resolv.conf
-cat <<EOF | tee /etc/resolv.conf
-nameserver 8.8.8.8
-nameserver 8.8.4.4
-EOF
+#systemctl disable systemd-resolved
+#systemctl stop systemd-resolved
+#
+#rm -f /etc/resolv.conf
+#cat <<EOF | tee /etc/resolv.conf
+#nameserver 8.8.8.8
+#nameserver 8.8.4.4
+#EOF
 
 # Enable NFS CacheFiles
 sed -i 's/#RUN=yes/RUN=yes/g' /etc/default/cachefilesd
