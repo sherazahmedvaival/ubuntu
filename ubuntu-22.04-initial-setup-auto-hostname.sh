@@ -56,8 +56,8 @@ source ~/.bashrc_fancy_prompt_v2.sh
 # cat /proc/sys/kernel/pid_max
 
 cat <<EOF | tee -a /etc/security/limits.conf
-root   soft    nofile  unlimited
-root   hard    nofile  unlimited
+root   soft    nofile  4194304
+root   hard    nofile  4194304
 root   soft    nproc   unlimited
 root   hard    nproc   unlimited
 root   soft    memlock unlimited
