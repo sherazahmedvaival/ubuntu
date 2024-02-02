@@ -56,8 +56,8 @@ source ~/.bashrc_fancy_prompt_v2.sh
 # cat /proc/sys/kernel/pid_max
 
 cat <<EOF | tee -a /etc/security/limits.conf
-root   soft    nofile  4194304
-root   hard    nofile  4194304
+root   soft    nofile  unlimited
+root   hard    nofile  unlimited
 root   soft    nproc   unlimited
 root   hard    nproc   unlimited
 root   soft    memlock unlimited
@@ -126,38 +126,38 @@ EOF
 # sysctl --system
 
 #############################################
-#cat <<EOF | tee /etc/rc.local
-##!/bin/bash  
-#echo never > /sys/kernel/mm/transparent_hugepage/enabled
-#echo never > /sys/kernel/mm/transparent_hugepage/defrag
-#exit 0 
-#EOF
-#cat /etc/rc.local
-#chmod +x /etc/rc.local
-#
-#cat <<EOF | tee /etc/systemd/system/rc-local.service
-#[Unit]  
-# Description=/etc/rc.local Compatibility  
-# ConditionPathExists=/etc/rc.local  
-#
-#[Service]  
-# Type=forking  
-# ExecStart=/etc/rc.local start  
-# TimeoutSec=0  
-# StandardOutput=tty  
-# RemainAfterExit=yes  
-# SysVStartPriority=99  
-#
-#[Install]  
-# WantedBy=multi-user.target
-#EOF
-#
-#chmod 644 /etc/systemd/system/rc-local.service
-#cat /etc/systemd/system/rc-local.service
-#
-#systemctl daemon-reload
-#systemctl enable rc-local
-#
+cat <<EOF | tee /etc/rc.local
+#!/bin/bash  
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+exit 0 
+EOF
+cat /etc/rc.local
+chmod +x /etc/rc.local
+
+cat <<EOF | tee /etc/systemd/system/rc-local.service
+[Unit]  
+ Description=/etc/rc.local Compatibility  
+ ConditionPathExists=/etc/rc.local  
+
+[Service]  
+ Type=forking  
+ ExecStart=/etc/rc.local start  
+ TimeoutSec=0  
+ StandardOutput=tty  
+ RemainAfterExit=yes  
+ SysVStartPriority=99  
+
+[Install]  
+ WantedBy=multi-user.target
+EOF
+
+chmod 644 /etc/systemd/system/rc-local.service
+cat /etc/systemd/system/rc-local.service
+
+systemctl daemon-reload
+systemctl enable rc-local
+
 #############################################
 
 ufw disable
