@@ -85,7 +85,8 @@ DefaultLimitMEMLOCK=infinity
 EOF
 
 cat /etc/systemd/system.conf
-cat <<EOF | tee /etc/sysctl.d/01-tweaks.conf
+#cat <<EOF | tee /etc/sysctl.d/01-tweaks.conf
+cat <<EOF | tee -a /etc/sysctl.conf
 # BEGIN TWEAKS #
 vm.swappiness = 0
 vm.max_map_count = 262144
