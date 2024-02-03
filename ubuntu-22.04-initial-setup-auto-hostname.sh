@@ -121,6 +121,7 @@ net.ipv4.tcp_congestion_control=bbr
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_max_syn_backlog = 100000
 net.ipv4.ip_nonlocal_bind    = 1
+fs.inotify.max_user_instances=256
 EOF
 
 # sysctl --system
