@@ -125,8 +125,8 @@ net.ipv4.tcp_max_syn_backlog = 100000
 net.ipv4.ip_nonlocal_bind    = 1
 EOF
 
-# sysctl --system
-
+sysctl --system
+sysctl -p /etc/sysctl.d/01-tweaks.conf
 #############################################
 cat <<EOF | tee /etc/rc.local
 #!/bin/bash  
