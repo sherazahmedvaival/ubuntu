@@ -63,8 +63,8 @@ root   hard    nproc   unlimited
 root   soft    memlock unlimited
 root   hard    memlock unlimited
 
-*   soft    nofile  4194304
-*   hard    nofile  4194304
+*   soft    nofile  unlimited
+*   hard    nofile  unlimited
 *   soft    nproc   unlimited
 *   hard    nproc   unlimited
 *   soft    memlock unlimited
