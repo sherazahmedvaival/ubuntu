@@ -125,8 +125,8 @@ fs.inotify.max_user_instances=256
 fs.inotify.max_user_watches=2003062
 EOF
 
-# sysctl --system
-
+sysctl --system
+sysctl -p /etc/sysctl.d/01-tweaks.conf
 #############################################
 cat <<EOF | tee /etc/rc.local
 #!/bin/bash  
