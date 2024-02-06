@@ -116,7 +116,8 @@ net.ipv4.tcp_synack_retries = 1
 net.ipv4.tcp_max_syn_backlog = 1024
 EOF
 
-
+sysctl --system
+sysctl -p /etc/sysctl.d/01-tweaks.conf
 #############################################
 
 cat <<EOF | tee /etc/rc.local
