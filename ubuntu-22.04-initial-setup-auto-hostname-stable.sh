@@ -132,7 +132,9 @@ cat <<EOF | tee /etc/rc.local
 #!/bin/bash  
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
 echo never > /sys/kernel/mm/transparent_hugepage/defrag
-exit 0 
+sleep 60
+sysctl -p /etc/sysctl.d/*.conf
+sysctl --system
 EOF
 cat /etc/rc.local
 chmod +x /etc/rc.local
