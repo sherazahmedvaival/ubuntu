@@ -287,7 +287,8 @@ cat <<EOF | tee /etc/docker/daemon.json
   "log-opts": {
     "max-size": "5m",
     "max-file": "3"
-  }
+  },
+  "iptables": false
 }
 EOF
 
